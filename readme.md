@@ -1,3 +1,23 @@
+# Readonly Contact system.
+Please refer to notes for Node-Neo4j Template below upon which this project is based. 
+
+This app is a readonly contact management system. It's intention is to display clients of an accounting practice and their &nbsp;
+associated tax returns. It has been developed as part of a coding competition where the prize is an iPad.&nbsp;
+You can see the source at github (https://github.com/AndrewESmith/IPad)
+
+The goal is to implement the following tools and technologies &nbsp;
+    - neo4j
+	- nodejs
+	- git
+	- http://www.heroku.com
+	- html5
+ 
+ As part of the exercise WebStorm (http://www.jetbrains.com/webstorm/) was used as the editor and debugger.
+
+Resources 
+	- The Node Beginner Book (http://www.nodebeginner.org/)
+	- yammer (http://www.yammer.com/)
+
 # Node-Neo4j Template
 
 This is a template app showing the use of [Neo4j][] from Node.js. It uses the

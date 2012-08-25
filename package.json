@@ -1,4 +1,4 @@
-{ "name": "NodeNeo4jContactSystem"
+{ "name": "ReadonlyContactSystem"
   , "description": "A readonly contact system based upon Node.js + Neo4j app."
   , "version": "0.0.1"
   , "author": "Andrew Smith <andy.e.smith@gmail.com> Original Author: Aseem Kishore <aseem.kishore@gmail.com>"
@@ -14,7 +14,7 @@
     { "node-dev": "~0.2.3"
   }
   , "engines":
-    { "node": "0.6.x"
+    { "node": "0.8.x"
     , "npm": "1.1.x"
   }
   , "scripts":
