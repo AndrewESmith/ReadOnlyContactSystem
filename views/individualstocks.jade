@@ -1,0 +1,13 @@
+h1 individualstocks
+
+if individualstocks.length
+    p Here are the current individualstock:
+    ul.individualstock
+        for individualstock in individualstocks
+            li.individualstock
+                a(href='/individualstocks/#{individualstock.id}') #{individualstock.id} 
+else
+    p There are no IndividualStocks records currently entered. Click Create to import from CSV.
+
+form(action='', method='POST')
+    input(type='submit', value='Import')

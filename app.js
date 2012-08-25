@@ -29,7 +29,7 @@ app.configure('production', function(){
 });
 
 app.helpers({
-    title: 'Node-Neo4j Template'    // default title
+    title: 'Node-Neo4j Contacts'    // default title
 });
 
 // Routes
@@ -44,6 +44,13 @@ app.del('/users/:id', routes.users.del);
 
 app.post('/users/:id/follow', routes.users.follow);
 app.post('/users/:id/unfollow', routes.users.unfollow);
+
+app.get('/individualstocks', routes.individualstocks.list);
+//app.post('/individualstocks', routes.individualstocks.create);
+app.post('/individualstocks', routes.individualstocks.import);
+app.get('/individualstocks/:id', routes.individualstocks.show);
+app.post('/individualstocks/:id', routes.individualstocks.edit);
+app.del('/individualstocks/:id', routes.individualstocks.del);
 
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

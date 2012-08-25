@@ -1,0 +1,22 @@
+h1 #{individualstock.id}
+
+p
+sdsfdfs dfssdf #{JSON.stringify(individualstock)}
+
+h3 Edit this Individual Stock Record:
+p
+input(type='text', name='PersonId', placeholder='#{individualstock.PersonId}', required)
+p
+input(type='text', name='StockId', placeholder='#{individualstock.StockId}', required)
+p
+input(type='text', name='Quantity', placeholder='#{individualstock.Quantity}', required)
+p
+input(type='submit', value='Update')
+
+form(action='/individualstocks/#{individualstock.id}', method='POST', onsubmit='return confirm("Are you sure?");')
+H3 And if you're feeling destructive…
+input(type='hidden', name='_method', value='DELETE')
+input(type='submit', value='Delete IndividualStock')
+
+p
+a(href='/individualstocks') Back to list of Individual Stocks

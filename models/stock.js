@@ -1,5 +1,5 @@
-// user.js
-// User model logic.
+// stock.js
+// Stock model logic.
 
 var neo4j = require('neo4j');
 var db = new neo4j.GraphDatabase(process.env.NEO4J_URL || 'http://localhost:7474');
@@ -8,22 +8,18 @@ var db = new neo4j.GraphDatabase(process.env.NEO4J_URL || 'http://localhost:7474
 
 var INDEX_NAME = 'nodes';
 var INDEX_KEY = 'type';
-var INDEX_VAL = 'user';
+var INDEX_VAL = 'stock';
 
-var FOLLOWS_REL = 'follows';
+var INDIVIDUAL_STOCK_HAS_STOCK = 'individual_stock_has_stock';
 
 // private constructor:
-
-var User = module.exports = function User(_node) {
-    // all we'll really store is the node; the rest of our properties will be
-    // derivable or just pass-through properties (see below).
+var stock = module.exports = function stock(_node) {
     this._node = _node;
 }
 
 // pass-through node properties:
-
 function proxyProperty(prop, isData) {
-    Object.defineProperty(User.prototype, prop, {
+    Object.defineProperty(stock.prototype, prop, {
         get: function () {
             if (isData) {
                 return this._node.data[prop];
@@ -42,23 +38,23 @@ function proxyProperty(prop, isData) {
 }
 
 proxyProperty('id');
-proxyProperty('exists');
+proxyProperty('code');
 proxyProperty('name', true);
+proxyProperty('basevalue', true);
 
 // private instance methods:
 
-User.prototype._getFollowingRel = function (other, callback) {
+stock.prototype._getIndividualOwnsStockRel = function (other, callback) {
     var query = [
-        'START user=node({userId}), other=node({otherId})',
-        'MATCH (user) -[rel?:FOLLOWS_REL]-> (other)',
+        'START stock=node({stockId})',
+        'MATCH (stock) -[rel?:INDIVIDUAL_STOCK_HAS_STOCK]-> (individualstock)',
         'RETURN rel'
     ].join('\n')
-        .replace('FOLLOWS_REL', FOLLOWS_REL);
+        .replace('INDIVIDUAL_STOCK_HAS_STOCK', INDIVIDUAL_STOCK_HAS_STOCK);
 
     var params = {
-        userId: this.id,
-        otherId: other.id,
-    };
+        stockId: this.id
+        };
 
     db.query(query, params, function (err, results) {
         if (err) return callback(err);
@@ -69,25 +65,25 @@ User.prototype._getFollowingRel = function (other, callback) {
 
 // public instance methods:
 
-User.prototype.save = function (callback) {
+stock.prototype.save = function (callback) {
     this._node.save(function (err) {
         callback(err);
     });
 };
 
-User.prototype.del = function (callback) {
+stock.prototype.del = function (callback) {
     this._node.del(function (err) {
         callback(err);
     }, true);   // true = yes, force it (delete all relationships)
 };
 
-User.prototype.follow = function (other, callback) {
-    this._node.createRelationshipTo(other._node, 'follows', {}, function (err, rel) {
+stock.prototype.has = function (other, callback) {
+    this._node.createRelationshipTo(other._node, 'has', {}, function (err, rel) {
         callback(err);
     });
 };
-
-User.prototype.unfollow = function (other, callback) {
+/*
+stock.prototype.unfollow = function (other, callback) {
     this._getFollowingRel(other, function (err, rel) {
         if (err) return callback(err);
         if (!rel) return callback(null);
@@ -95,27 +91,28 @@ User.prototype.unfollow = function (other, callback) {
             callback(err);
         });
     });
-};
+};*/
+/*
 
 // calls callback w/ (err, following, others) where following is an array of
-// users this user follows, and others is all other users minus him/herself.
-User.prototype.getFollowingAndOthers = function (callback) {
-    // query all users and whether we follow each one or not:
+// stocks this stock follows, and others is all other stocks minus him/herself.
+stock.prototype.getFollowingAndOthers = function (callback) {
+    // query all stocks and whether we follow each one or not:
     var query = [
-        'START user=node({userId}), other=node:INDEX_NAME(INDEX_KEY="INDEX_VAL")',
-        'MATCH (user) -[rel?:FOLLOWS_REL]-> (other)',
+        'START stock=node({stockId}), other=node:INDEX_NAME(INDEX_KEY="INDEX_VAL")',
+        'MATCH (stock) -[rel?:INDIVIDUAL_STOCK_HAS_STOCK]-> (other)',
         'RETURN other, COUNT(rel)'  // COUNT(rel) is a hack for 1 or 0
     ].join('\n')
         .replace('INDEX_NAME', INDEX_NAME)
         .replace('INDEX_KEY', INDEX_KEY)
         .replace('INDEX_VAL', INDEX_VAL)
-        .replace('FOLLOWS_REL', FOLLOWS_REL);
+        .replace('INDIVIDUAL_STOCK_HAS_STOCK', INDIVIDUAL_STOCK_HAS_STOCK);
 
     var params = {
-        userId: this.id,
+        stockId: this.id
     };
 
-    var user = this;
+    var stock = this;
     db.query(query, params, function (err, results) {
         if (err) return callback(err);
 
@@ -123,12 +120,12 @@ User.prototype.getFollowingAndOthers = function (callback) {
         var others = [];
 
         for (var i = 0; i < results.length; i++) {
-            var other = new User(results[i]['other']);
+            var other = new stock(results[i]['other']);
             var follows = results[i]['count(rel)'];
             // XXX neo4j bug: returned names are always lowercase!
             // TODO FIXME when updating to the next version of neo4j.
 
-            if (user.id === other.id) {
+            if (stock.id === other.id) {
                 continue;
             } else if (follows) {
                 following.push(other);
@@ -140,38 +137,39 @@ User.prototype.getFollowingAndOthers = function (callback) {
         callback(null, following, others);
     });
 };
+*/
 
 // static methods:
 
-User.get = function (id, callback) {
+stock.get = function (id, callback) {
     db.getNodeById(id, function (err, node) {
         if (err) return callback(err);
-        callback(null, new User(node));
+        callback(null, new stock(node));
     });
 };
 
-User.getAll = function (callback) {
+stock.getAll = function (callback) {
     db.getIndexedNodes(INDEX_NAME, INDEX_KEY, INDEX_VAL, function (err, nodes) {
         // if (err) return callback(err);
         // XXX FIXME the index might not exist in the beginning, so special-case
         // this error detection. warning: this is super brittle!!
         if (err) return callback(null, []);
-        var users = nodes.map(function (node) {
-            return new User(node);
+        var stocks = nodes.map(function (node) {
+            return new stock(node);
         });
-        callback(null, users);
+        callback(null, stocks);
     });
 };
 
-// creates the user and persists (saves) it to the db, incl. indexing it:
-User.create = function (data, callback) {
+// creates the stock and persists (saves) it to the db, incl. indexing it:
+stock.create = function (data, callback) {
     var node = db.createNode(data);
-    var user = new User(node);
+    var stock = new stock(node);
     node.save(function (err) {
         if (err) return callback(err);
         node.index(INDEX_NAME, INDEX_KEY, INDEX_VAL, function (err) {
             if (err) return callback(err);
-            callback(null, user);
+            callback(null, stock);
         });
     });
 };
