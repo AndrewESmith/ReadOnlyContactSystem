@@ -3,7 +3,7 @@ Please refer to notes for Node-Neo4j Template below upon which this project is b
 
 This app is a readonly contact management system. It's intention is to display clients of an accounting practice and their &nbsp;
 associated tax returns. It has been developed as part of a coding competition where the prize is an iPad.&nbsp;
-You can see the source at github (https://github.com/AndrewESmith/IPad)
+You can see the source at github (https://github.com/AndrewESmith/ReadOnlyContactSystem)
 
 The goal is to implement the following tools and technologies &nbsp;
     - neo4j
@@ -13,6 +13,11 @@ The goal is to implement the following tools and technologies &nbsp;
 	- html5
  
  As part of the exercise WebStorm (http://www.jetbrains.com/webstorm/) was used as the editor and debugger.
+
+Major Outstanding issues
+1. I require a worker role in Heruko in order to support long running processes. Web roles are limited to 30 seconds and imports
+and long processes such as browse a list require more time. Worker role is added to Procfile. Worker role basics here: http://stackoverflow.com/questions/4762016/node-js-workers-background-processes
+
 
 Resources 
 	- The Node Beginner Book (http://www.nodebeginner.org/)

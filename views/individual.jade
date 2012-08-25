@@ -1,0 +1,42 @@
+h1 #{individual.id}
+
+p
+	|stringify #{JSON.stringify(individual)}
+	.
+	
+h3 Edit this Individual Stock Record:
+p
+input(type='text', name='ManagedBy', placeholder='#{individual.ManagedBy}', required)
+p
+input(type='text', name='Title', placeholder='#{individual.Title}', required)
+p
+input(type='text', name='FirstName', placeholder='#{individual.FirstName}', required)
+p
+input(type='text', name='LastName', placeholder='#{individual.LastName}', required)
+P
+input(type='text', name='Gender', placeholder='#{individual.Gender}', required)
+p
+input(type='text', name='DOB', placeholder='#{individual.DOB}', required)
+p
+input(type='text', name='TFN', placeholder='#{individual.TFN}', required)
+p
+input(type='text', name='Mobile', placeholder='#{individual.Mobile}', required)
+p
+input(type='text', name='Email', placeholder='#{individual.Email}', required)
+p
+input(type='text', name='Twitter', placeholder='#{individual.Twitter}', required)
+p
+input(type='text', name='Notes', placeholder='#{individual.Notes}', required)
+p
+input(type='text', name='ReferralId', placeholder='#{individual.ReferralId}', required)
+p
+input(type='submit', value='Update')
+
+
+form(action='/individuals/#{individual.id}', method='POST', onsubmit='return confirm("Are you sure?");')
+H3 And if you're feeling destructive…
+input(type='hidden', name='_method', value='DELETE')
+input(type='submit', value='Delete individual')
+
+p
+a(href='/individuals') Back to list of Individuals

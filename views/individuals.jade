@@ -1,0 +1,13 @@
+h1 individuals
+
+if individuals.length
+    p Here are the current individual:
+    ul.individual
+        for individual in individuals
+            li.individual
+                a(href='/individuals/#{individual.id}') #{individual.id} 
+else
+    p There are no individuals records currently entered. Click Import to retrieve data from CSV.
+
+form(action='', method='POST')
+    input(type='submit', value='Import')

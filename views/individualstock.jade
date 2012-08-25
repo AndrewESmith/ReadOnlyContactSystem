@@ -1,8 +1,9 @@
 h1 #{individualstock.id}
 
 p
-sdsfdfs dfssdf #{JSON.stringify(individualstock)}
-
+	|stringify #{JSON.stringify(individualstock)}
+	.
+	
 h3 Edit this Individual Stock Record:
 p
 input(type='text', name='PersonId', placeholder='#{individualstock.PersonId}', required)

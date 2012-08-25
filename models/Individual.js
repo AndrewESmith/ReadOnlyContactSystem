@@ -18,8 +18,6 @@ var Individual = module.exports = function Individual(_node) {
     this._node = _node;
 }
 
-
-// pass-through node properties:
 function proxyProperty(prop, isData) {
     Object.defineProperty(Individual.prototype, prop, {
         get: function () {
@@ -40,19 +38,18 @@ function proxyProperty(prop, isData) {
 }
 
 proxyProperty('id');
-proxyProperty('managedby');
-proxyProperty('title', true);
-proxyProperty('firstname', true);
-proxyProperty('lastname', true);
-proxyProperty('gender', true);
-proxyProperty('dob', true);
-proxyProperty('tfn', true);
-proxyProperty('mobile', true);
-proxyProperty('email', true);
-proxyProperty('twitter', true);
-proxyProperty('notes', true);
-proxyProperty('referralid');
-// private instance methods:
+proxyProperty('ManagedBy');
+proxyProperty('Title', true);
+proxyProperty('FirstName', true);
+proxyProperty('LastName', true);
+proxyProperty('Gender', true);
+proxyProperty('DOB', true);
+proxyProperty('TFN', true);
+proxyProperty('Mobile', true);
+proxyProperty('Email', true);
+proxyProperty('Twitter', true);
+proxyProperty('Notes', true);
+proxyProperty('ReferralId');
 
 //Recommendation from Safwan that empty or null properties should be deleted from
 //java script object otherwise Neo4j can't save node.
@@ -76,9 +73,27 @@ function loadindividual(data, index){
     });
  };
 
-individual.prototype._getIndividualOwnsindividualRel = function (other, callback) {
+Individual.import = function(callback){
+    csv()
+        .fromPath('CSV_data/Individual.csv',{
+           columns: true
+        })
+        .on('data',function(data,index){
+            loadindividual(data, index);
+            console.log('#'+index+' '+JSON.stringify(data));
+        })
+        .on('end',function(count){
+            console.log('Number of lines: '+count);
+        })
+        .on('error',function(error){
+            console.log(error.message);
+        });
+
+};
+
+Individual.prototype._getIndividualOwnsindividualRel = function (other, callback) {
     var query = [
-        'START individual=node({individualId})',
+        'START individual=node({id})',
         'MATCH (individual) -[rel?:INDIVIDUAL_individual_HAS_individual]-> (individualindividual)',
         'RETURN rel'
     ].join('\n')
@@ -97,31 +112,29 @@ individual.prototype._getIndividualOwnsindividualRel = function (other, callback
 
 // public instance methods:
 
-individual.prototype.save = function (callback) {
+Individual.prototype.save = function (callback) {
     this._node.save(function (err) {
         callback(err);
     });
 };
 
-individual.prototype.del = function (callback) {
+Individual.prototype.del = function (callback) {
     this._node.del(function (err) {
         callback(err);
     }, true);   // true = yes, force it (delete all relationships)
 };
 
-individual.prototype.has = function (other, callback) {
+Individual.prototype.has = function (other, callback) {
     this._node.createRelationshipTo(other._node, 'has', {}, function (err, rel) {
         callback(err);
     });
 };
 
 
-// static methods:
-
 Individual.get = function (id, callback) {
     db.getNodeById(id, function (err, node) {
         if (err) return callback(err);
-        callback(null, new individual(node));
+        callback(null, new Individual(node));
     });
 };
 
@@ -138,28 +151,13 @@ Individual.getAll = function (callback) {
     });
 };
 
-IndividualStock.import = function(callback){
-    csv()
-        .fromPath('CSV_data/Individual.csv',{
-           columns: true
-        })
-        .on('data',function(data,index){
-            loadindividual(data, index);
-            console.log('#'+index+' '+JSON.stringify(data));
-        })
-        .on('end',function(count){
-            console.log('Number of lines: '+count);
-        })
-        .on('error',function(error){
-            console.log(error.message);
-        });
-
-};
-
 // creates the individual and persists (saves) it to the db, incl. indexing it:
 Individual.create = function (data, callback) {
     var node = db.createNode(data);
     var individual = new Individual(node);
+    removeEmptyNullProperties(function(err){
+        if (err) return callback(err);
+    });
     node.save(function (err) {
         if (err) return callback(err);
         node.index(INDEX_NAME, INDEX_KEY, INDEX_VAL, function (err) {
@@ -168,3 +166,4 @@ Individual.create = function (data, callback) {
         });
     });
 };
+

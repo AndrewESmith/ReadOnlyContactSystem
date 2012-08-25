@@ -13,15 +13,6 @@ var IndividualStock = require('../models/individualstock');
         });
 };
 */
-// POST /individual stock
-exports.import = function (req, res, next) {
-    IndividualStock.import(function (err, individualstocks) {
-        if (err) return next(err);
-        res.render('individualstocks', {
-            individualstocks: individualstocks
-        });
-    });
-};
 
 exports.show = function (req, res, next) {
     IndividualStock.get(req.params.id, function (err, individualstock) {
@@ -64,6 +55,16 @@ exports.del = function (req, res, next) {
         individualstock.del(function (err) {
             if (err) return next(err);
             res.redirect('/individualstocks');
+        });
+    });
+};
+
+// POST /individual stock
+exports.import = function (req, res, next) {
+    IndividualStock.import(function (err, individualstocks) {
+        if (err) return next(err);
+        res.render('individualstocks', {
+            individualstocks: individualstocks
         });
     });
 };

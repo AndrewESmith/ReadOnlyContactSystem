@@ -52,5 +52,11 @@ app.get('/individualstocks/:id', routes.individualstocks.show);
 app.post('/individualstocks/:id', routes.individualstocks.edit);
 app.del('/individualstocks/:id', routes.individualstocks.del);
 
+app.get('/individuals', routes.individuals.list);
+//app.post('/individuals', routes.individuals.create);
+app.post('/individuals', routes.individuals.import);
+app.get('/individuals/:id', routes.individuals.show);
+app.post('/individuals/:id', routes.individuals.edit);
+app.del('/individuals/:id', routes.individuals.del);
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

@@ -3,7 +3,6 @@
 
 var neo4j = require('neo4j');
 var csv = require('csv');
-//var helper=require('../helper');
 var db = new neo4j.GraphDatabase(process.env.NEO4J_URL || 'http://localhost:7474');
 
 // constants:
@@ -65,14 +64,6 @@ function loadindividualstock(data, index){
     });
  };
 
-IndividualStock.get = function (individualstockId, callback) {
-    db.getNodeById(individualstockId, function (err, node) {
-        if (err) return callback(err);
-        callback(null, new IndividualStock(node));
-    });
-};
-
-
 IndividualStock.import = function(callback){
     csv()
         .fromPath('CSV_data/Individual_Stock.csv',{
@@ -91,13 +82,9 @@ IndividualStock.import = function(callback){
 
 };
 
-//success
-//error
-
-// public instance methods:
 IndividualStock.prototype._getIndividualOwnsIndividualStockRel = function (other, callback) {
     var query = [
-        'START individualstock=node({individualstockId})',
+        'START individualstock=node({id})',
         'MATCH (individualstock) -[rel?:INDIVIDUAL_individualstock_HAS_individualstock]-> (individualindividualstock)',
         'RETURN rel'
     ].join('\n')
@@ -132,10 +119,9 @@ IndividualStock.prototype.has = function (other, callback) {
         callback(err);
     });
 };
-// static methods:
 
-IndividualStock.get = function (id, callback) {
-    db.getNodeById(id, function (err, node) {
+IndividualStock.get = function (individualstockId, callback) {
+    db.getNodeById(individualstockId, function (err, node) {
         if (err) return callback(err);
         callback(null, new IndividualStock(node));
     });
