@@ -9,6 +9,7 @@
     , "neo4j": "~0.2.12"
     , "stylus": "~0.27.1"
     , "csv": "~0.0.18"
+    , "npm": "~1.1.59"
   }
   , "devDependencies":
     { "node-dev": "~0.2.3"
