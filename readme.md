@@ -22,9 +22,10 @@ Visit 'List all individuals' and 'List all individual stocks' and click Import b
 https://github.com/AndrewESmith/ReadOnlyContactSystem/blob/master/Data_Dictionary/Data_Analyzing.pptx
 
 Major Outstanding issues
-1. I require a worker role in Heruko in order to support long running processes. Web roles are limited to 30 seconds and imports
+1. When importing on Heroku I encountered a time out. I think that I require a worker role in order to support long running processes. Web roles are limited to 30 seconds and imports
 and long processes such as browse a list require more time. Worker role is added to Procfile. Worker role basics here: http://stackoverflow.com/questions/4762016/node-js-workers-background-processes
 The answer is to use CloudAMQP (https://devcenter.heroku.com/articles/cloudamqp#use-with-nodejs)
+2. Pretty much everything else ....
 
 # Resources 
 	- The Node Beginner Book (http://www.nodebeginner.org/)
