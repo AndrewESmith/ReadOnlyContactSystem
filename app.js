@@ -29,7 +29,7 @@ app.configure('production', function(){
 });
 
 app.helpers({
-    title: 'Node-Neo4j Contacts'    // default title
+    title: 'ROCkS - A Read Only Contact System'    // default title
 });
 
 // Routes
