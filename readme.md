@@ -6,7 +6,7 @@ associated tax returns. It has been developed as part of a coding competition wh
 You can see the source at github (https://github.com/AndrewESmith/ReadOnlyContactSystem)
 It is hosted on heroku here: http://readonlycontactsystem.herokuapp.com/
 
-The goal is to implement the following tools and technologies &nbsp;
+The goal is to implement a contact system using the following tools and technologies &nbsp;
     - neo4j
 	- nodejs
 	- git
@@ -15,14 +15,21 @@ The goal is to implement the following tools and technologies &nbsp;
  
  As part of the exercise WebStorm (http://www.jetbrains.com/webstorm/) was used as the editor and debugger.
 
+# Import
+Visit 'List all individuals' and 'List all individual stocks' and click Import button if data hasn't already been loaded
+
+# Neo4j Data Diagram
+https://github.com/AndrewESmith/ReadOnlyContactSystem/blob/master/Data_Dictionary/Data_Analyzing.pptx
+
 Major Outstanding issues
 1. I require a worker role in Heruko in order to support long running processes. Web roles are limited to 30 seconds and imports
 and long processes such as browse a list require more time. Worker role is added to Procfile. Worker role basics here: http://stackoverflow.com/questions/4762016/node-js-workers-background-processes
 The answer is to use CloudAMQP (https://devcenter.heroku.com/articles/cloudamqp#use-with-nodejs)
 
-Resources 
+# Resources 
 	- The Node Beginner Book (http://www.nodebeginner.org/)
 	- yammer (http://www.yammer.com/)
+
 
 -----------------------------------------------------------------------------------------------------------------
 # Node-Neo4j Template
